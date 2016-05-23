@@ -19,8 +19,12 @@ class ArticlesController < ApplicationController
   end
 
   def create
+
     @category = Category.find(params[:category_id])
-    @article = @category.articles.new(articles_params)
+    @article = Article.new(articles_params)
+    @article.category = @category
+    @article.user = current_user
+
     if @article.save
       redirect_to category_article_path(@category, @article)
         else
@@ -45,6 +49,6 @@ class ArticlesController < ApplicationController
 
   private
     def articles_params
-      params.require(:article).permit(:title, :body).merge(category_id: params[:category_id])
+      params.require(:article).permit(:title, :body)
     end
 end
